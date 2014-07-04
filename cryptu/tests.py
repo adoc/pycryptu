@@ -1,3 +1,7 @@
+import sys
+__py3__ = sys.version_info[0] is 3
+
+import binascii
 import unittest
 
 import cryptu.hash
@@ -35,20 +39,19 @@ class TestHash(unittest.TestCase):
 
     def test_algs(self):
         for k, v in self.sha1vals.items():
-            d = cryptu.hash.sha1.new(k).digest()
+            d = cryptu.hash.sha1.new(k.encode()).digest()
             self.assertEqual(len(d), 20)
-            self.assertEqual(d.encode('hex'), v)
+            self.assertEqual(binascii.hexlify(d), v.encode())
 
         for k, v in self.sha256vals.items():
-
-            d = cryptu.hash.sha256.new(k).digest()
+            d = cryptu.hash.sha256.new(k.encode()).digest()
             self.assertEqual(len(d), 32)
-            self.assertEqual(d.encode('hex'), v)
+            self.assertEqual(binascii.hexlify(d), v.encode())
 
         for k, v in self.sha512vals.items():
-            d = cryptu.hash.sha512.new(k).digest()
+            d = cryptu.hash.sha512.new(k.encode()).digest()
             self.assertEqual(len(d), 64)
-            self.assertEqual(d.encode('hex'), v)
+            self.assertEqual(binascii.hexlify(d), v.encode())
 
     def test_timed_serializer(self):
         """
@@ -57,9 +60,10 @@ class TestHash(unittest.TestCase):
 
     def test_shash(self):
         for k, v in self.shashvals.items():
-            d = cryptu.hash.shash(k).digest()
+            d = cryptu.hash.shash(k.encode()).digest()
             self.assertEqual(len(d), 64)
-            self.assertEqual(d.encode('hex'), v)
+
+            self.assertEqual(binascii.hexlify(d), v.encode())
 
 
 class TestRandom(unittest.TestCase):
@@ -68,5 +72,8 @@ class TestRandom(unittest.TestCase):
     def test_crypto_random(self):
         for i in range(256):
             rnd = cryptu.random.read(i)
-            self.assertIsInstance(rnd, str) # HAs to be changed for Py 3.
+            if __py3__:
+                self.assertIsInstance(rnd, bytes)
+            else:
+                self.assertIsInstance(rnd, str)
             self.assertEqual(len(rnd), i)

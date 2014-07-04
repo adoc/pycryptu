@@ -63,7 +63,6 @@ def shash(*values, **kwa):
     prealg = kwa.get('prealg', HASH_DEFAULT_PREALG)
     alg = kwa.get('alg', HASH_DEFAULT_ALG)
 
-
     _hash = alg.new()
 
     def prehash(nonce):

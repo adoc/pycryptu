@@ -1,7 +1,10 @@
 """
 """
+import sys
 import logging
 
+
+__py3__ = sys.version_info[0] is 3
 
 
 logger = logging.getLogger(__name__)
@@ -24,6 +27,9 @@ except ImportError:
             for i in range(int(math.ceil(length/32.0))):
                 rnd = os.urandom(length*URANDOM_ENTROPY_FACTOR) # for attempted entropy.
                 yield cryptu.hash.sha256.new(rnd).digest()
-        return ''.join(gen())[:length]
+        if __py3__:
+            return b''.join(gen())[:length]
+        else:
+            return ''.join(gen())[:length]
 else:
     read = Random.new().read

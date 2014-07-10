@@ -22,7 +22,9 @@ class HashlibAdapter(object):
             return self._alg_cls()
 
 try:
-    import Crypto.Hash
+    import Crypto.Hash.SHA1
+    import Crypto.Hash.SHA512
+    import Crypto.Hash.SHA256
 except ImportError:
     sha1 = HashlibAdapter(hashlib.sha1)
     sha512 = HashlibAdapter(hashlib.sha512)

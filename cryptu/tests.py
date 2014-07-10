@@ -1,11 +1,15 @@
 import sys
 __py3__ = sys.version_info[0] is 3
 
+import os
+import random
 import binascii
 import unittest
 
 import cryptu.hash
 import cryptu.random
+import cryptu.pkcs7
+import cryptu.aes
 
 # Just some simple Py3/Py2 cross-compat.
 try:
@@ -77,3 +81,34 @@ class TestRandom(unittest.TestCase):
             else:
                 self.assertIsInstance(rnd, str)
             self.assertEqual(len(rnd), i)
+
+
+class Pkcs7Test(unittest.TestCase):
+    """ """
+    def test_pkcs7(self):
+        def test(text):
+            a = cryptu.pkcs7.encode(text)
+            b = cryptu.pkcs7.encode(text)
+            assert len(a) % 4 == 0
+            assert len(b) % 4 == 0
+            assert a == b
+
+        for i in range(1000):
+            text = os.urandom(int(random.random()*10000))
+            test(text)
+
+
+class AesTest(unittest.TestCase):
+    def test_aes(self):
+        
+
+
+        def test(text, key, iv):
+            a = cryptu.aes.Aes(key, iv)
+            assert a.decrypt(a.encrypt(text)) == text
+
+        test(b'iviviviviviviviviviviviviviviviv',
+                b'iviviviviviviviviviviviviviviviv',
+                b'iviviviviviviviv')
+
+        test('01234567890'.encode(), *cryptu.aes.gen_keyiv())

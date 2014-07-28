@@ -12,6 +12,10 @@ except NameError:
 
 
 class HashlibAdapter(object):
+    # Very limited and most likely broken adapter to unify
+    #   Crypto.Hash algs and hashlib algs.
+    # Might be easier to adapt Crypto.Hash to hashlib by removing the
+    #   `new` call
     def __init__(self, alg):
         self._alg_cls = alg
 

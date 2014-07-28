@@ -10,7 +10,7 @@ __py3__ = sys.version_info[0] is 3
 logger = logging.getLogger(__name__)
 
 
-URANDOM_ENTROPY_FACTOR = 8
+URANDOM_ENTROPY_FACTOR = 1
 
 # Random function.
 try:
@@ -21,12 +21,12 @@ except ImportError:
     import os
     import math
     import cryptu.hash
-    def read(length):
+    def read(length, hashalg=cryptu.hash.sha256.new):
         # Don't use for greater than 10,000 bytes.
         def gen():
-            for i in range(int(math.ceil(length/32.0))):
+            for i in range(int(math.ceil(length/hashalg.digest_size))):
                 rnd = os.urandom(length*URANDOM_ENTROPY_FACTOR) # for attempted entropy.
-                yield cryptu.hash.sha256.new(rnd).digest()
+                yield hashalg(rnd).digest()
         if __py3__:
             return b''.join(gen())[:length]
         else:

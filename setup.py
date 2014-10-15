@@ -12,7 +12,7 @@ requires = [
     ]
 
 setup(name='cryptu',
-      version='0.1',
+      version='0.2',
       description='Python cryptography utilities.',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

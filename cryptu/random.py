@@ -24,7 +24,7 @@ except ImportError:
     def read(length, hashalg=cryptu.hash.sha256.new):
         # Don't use for greater than 10,000 bytes.
         def gen():
-            for i in range(int(math.ceil(length/hashalg.digest_size))):
+            for i in range(int(math.ceil(length/hashalg().digest_size))):
                 rnd = os.urandom(length*URANDOM_ENTROPY_FACTOR) # for attempted entropy.
                 yield hashalg(rnd).digest()
         if __py3__:
